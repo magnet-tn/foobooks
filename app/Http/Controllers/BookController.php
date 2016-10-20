@@ -15,7 +15,7 @@ class BookController extends Controller
      */
     public function index()
     {
-        return 'Hi from the book controller!';//
+        return 'Hi, This is from the book controller!';//
     }
 
     /**

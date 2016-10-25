@@ -32,6 +32,13 @@ Route::get('/contact', 'ContactController@faq')->name('contact');
 
 
 /**
+* Log Viewer
+* Package loaded for a nice log viewing package
+*/
+Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
+
+
+/**
 * A quick and dirty way to set up a whole bunch of practice routes
 * that I'll use in lecture.
 */

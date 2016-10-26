@@ -8,9 +8,20 @@ use App\Http\Requests;
 
 use Rych\Random\Random;
 
+use joshtronic\LoremIpsum;
+
 class PracticeController extends Controller
 {
 
+    /**
+    *
+    */
+    public function example5() {
+        $lipsum = new LoremIpsum();
+        echo '3 words: ' . $lipsum->words(3) . "---------";
+        echo '1 sentence:  ' . $lipsum->sentence() . "-------";
+        echo '2 paragraphs: ' . $lipsum->paragraphs(2) . "+++";
+    }
     /**
     *
     */

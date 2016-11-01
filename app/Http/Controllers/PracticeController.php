@@ -16,6 +16,33 @@ class PracticeController extends Controller
     /**
     *
     */
+    public function example6() {
+        $numberOfUsers = 5;
+        $count = 0;
+        for ($j = 0; $j < 8; $j++){
+            $gen = new \RandomUser\Generator();
+            $user = $gen->getUser();
+            if($count==$numberOfUsers){
+                break;
+            } else {
+                if(ctype_alpha ( $user->getFirstName() )){
+                    echo $user->getFirstName(). ' ';
+                    $count++;
+                } else{
+                    continue;
+                }
+                echo $user->getLastName() . ', ';
+                echo $user->getGender() . ', ';
+                echo $user->getDateOfBirth() . ', ';
+                echo $user->getUsername() . ', ';
+                echo $user->getSalt() . '<br>';
+            }
+        }
+    }
+
+    /**
+    *
+    */
     public function example5() {
         $lipsum = new LoremIpsum();
         echo '3 words: ' . $lipsum->words(3) . "---------";

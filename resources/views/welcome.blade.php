@@ -3,5 +3,5 @@
 @section('title', 'Welcome to Foobooks')
 
 @section('content')
-    Welcome to Foobooks.
+    This is the Welcome Page to Foobooks.
 @endsection

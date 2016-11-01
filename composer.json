@@ -10,7 +10,8 @@
         "barryvdh/laravel-debugbar": "^2.3",
         "rych/random": "^0.1.0",
         "rap2hpoutre/laravel-log-viewer": "^0.7.0",
-        "joshtronic/php-loremipsum": "dev-master"
+        "joshtronic/php-loremipsum": "dev-master",
+        "randomuser/generator"  : "1.0.*"        
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

@@ -14,13 +14,18 @@
     <link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css' rel='stylesheet'>
     <link href='https://maxcdn.bootstrapcdn.com/bootswatch/3.3.5/lumen/bootstrap.min.css' rel='stylesheet'>
 
-    <link href="/css/foobooks.css" type='text/css' rel='stylesheet'>
+    <link href='/css/foobooks.css' type='text/css' rel='stylesheet'>
 
     {{-- Yield any page specific CSS files or anything else you might want in the <head> --}}
     @yield('head')
 
 </head>
 <body>
+
+    @if(Session::get('flash_message') != null)
+        <div class='flash_message'>{{ Session::get('flash_message') }}</div>
+    @endif
+
 
     <header>
         <a href='/'>

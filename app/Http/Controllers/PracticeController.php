@@ -20,39 +20,52 @@ class PracticeController extends Controller
     /**
     *
     */
-    public function example20() {
+    public function example16() {
     //
     }
+    /**
+    *
+    */
+    public function example15() {
+        /*
+    2 separate queries on the database:
+    */
+    // $books = Book::orderBy('id','descending')->get(); # Query DB
+    // $first_book = Book::orderBy('id','descending')->first(); # Query DB
+    // dump($books);
 
+    /*
+    1 query on the database, 1 query on the collection (better):
+    */
+    $books = Book::orderBy('id','descending')->get(); # Query DB
+    $first_book = $books->first(); # Query Collection
+    dump($books);
+    dump($first_book);
+    }
+    /**
+    *
+    */
+    public function example14() {
+        $books = Book::all();
+        foreach($books as $book) {
+            #echo $book->title.'<br>';
+            echo $book['title'];
+        }
+    }
     /**
     *   Remove any books by the author “J.K. Rowling”.
     */
-    public function example19() {
-        # First get a book to update
-        $books = Book::where('author', 'LIKE', '%J.K. Rowling%')->get();
+    public function example106() {
 
-        # If we found the book, update it
-        if($books) {
-            # change each author in books
-            foreach($books as $book) {
-                # Delete each
-                echo $book->title.'<br>';
-                $book->delete();
-            }
-            # Save the changes
-            //$book->save();
+        Book::where('title','LIKE','Harry Potter')->delete();
 
-            echo "Update complete; check the database to see if your update worked...";
-        }
-        else {
-            echo "Book not found, can't update.";
-        }
+        return "Deleted all books with title Harry Potter.";
     }
     /**
     *   Find any books by the author Bell Hooks
     *   and update the author name to be bell hooks (lowercase).
     */
-    public function example18() {
+    public function example105() {
         # First get a book to update
         $books = Book::where('author', 'LIKE', '%Bell Hooks%')->get();
 
@@ -77,7 +90,7 @@ class PracticeController extends Controller
     *   Retrieve all the books in descending order according to
     *   published date.
     */
-    public function example17() {
+    public function example104() {
         $books = Book::orderBy('published', 'desc')->get();
 
         #
@@ -95,7 +108,7 @@ class PracticeController extends Controller
     /**
     *   Retrieve all the books in alphabetical order by title.
     */
-    public function example16() {
+    public function example103() {
         $books = Book::orderBy('title')->get();
 
         #
@@ -113,7 +126,7 @@ class PracticeController extends Controller
     /**
     *   Retrieve all the books published after 1950.
     */
-    public function example15() {
+    public function example102() {
         $books = Book::where('published', '>', 1950)->get();
 
         #
@@ -131,7 +144,7 @@ class PracticeController extends Controller
     /**
     *  Retrieve the last 5 books that were added to the books table.
     */
-    public function example14() {
+    public function example101() {
         $books = Book::latest()->get();
 
         #
@@ -226,7 +239,7 @@ class PracticeController extends Controller
         # Set the parameters
         # Note how each parameter corresponds to a field in the table
         $book->title = 'Harry Potter';
-        $book->author = 'J.K. Rowling';
+//        $book->author = 'J.K. Rowling';
         $book->published = 1997;
         $book->cover = 'http://prodimage.images-bn.com/pimages/9780590353427_p0_v1_s484x700.jpg';
         $book->purchase_link = 'http://www.barnesandnoble.com/w/harry-potter-and-the-sorcerers-stone-j-k-rowling/1100036321?ean=9780590353427';

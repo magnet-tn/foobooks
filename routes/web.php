@@ -16,13 +16,13 @@ Route::post('/books', 'BookController@store')->name('books.store');
 Route::get('/books/{title}', 'BookController@show')->name('books.show');
 
 # Show form to edit a book
-Route::get('/books/{title}/edit', 'BookController@edit')->name('books.edit');
+Route::get('/books/{id}/edit', 'BookController@edit')->name('books.edit');
 
 # Process form to edit a book
-Route::put('/books/{title}', 'BookController@update')->name('books.update');
+Route::put('/books/{id}', 'BookController@update')->name('books.update');
 
 # Delete a book
-Route::delete('/books/{title}', 'BookController@destroy')->name('books.destroy');
+Route::delete('/books/{id}', 'BookController@destroy')->name('books.destroy');
 
 # or I could have used one line:
 # Route::resource('books', 'BookController');
@@ -58,7 +58,7 @@ if(App::environment() == 'local') {
 * that I'll use in lecture.
 */
 Route::get('/practice', 'PracticeController@index')->name('practice.index');
-for($i = 0; $i < 100; $i++) {
+for($i = 0; $i < 107; $i++) {
     Route::get('/practice/'.$i, 'PracticeController@example'.$i)->name('practice.example'.$i);
 }
 
@@ -68,6 +68,8 @@ for($i = 0; $i < 100; $i++) {
 Route::get('/', function () {
     return view('welcome');
 });
+// or home page is now the view all books with below...
+//Route::get('/', 'BookController@index');
 
 /**
 * Development related

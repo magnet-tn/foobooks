@@ -26,26 +26,10 @@
                     <br>
                     <a href='/books/{{ $book->id }}/edit'><i class='fa fa-pencil'></i> Edit</a><br>
                     <a href='/books/{{ $book->id }}'><i class='fa fa-eye'></i> View</a><br>
-                    <a href='/books/{{ $book->id }}'> Delete</a><br>
+                    <a href='/books/delete/{{ $book->id }}'> Delete</a><br>
 
                 </section>
             @endforeach
         </div>
     @endif
 @endsection
-
-<!-- was the following until 16 November -->
-<!-- @extends('layouts.master')
-
-@section('title')
-    All the Books
-@stop
-
-@section('content')
-    <div class='book'>
-        @foreach($books as $book)
-            <h3>{{ $book->title }}</h3>
-            <img src='{{ $book->cover }}'>
-        @endforeach
-    </div>
-@stop -->

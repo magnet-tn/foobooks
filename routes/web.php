@@ -22,7 +22,7 @@ Route::get('/books/{id}/edit', 'BookController@edit')->name('books.edit');
 Route::put('/books/{id}', 'BookController@update')->name('books.update');
 
 # Delete a book
-Route::delete('/books/{id}', 'BookController@destroy')->name('books.destroy');
+Route::get('/books/delete/{id}', 'BookController@destroy')->name('books.destroy');
 
 # or I could have used one line:
 # Route::resource('books', 'BookController');

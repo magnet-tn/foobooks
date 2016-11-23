@@ -123,14 +123,19 @@ class BookController extends Controller
     /**
      *
      */
-    public function destroy($id)
-    {
+    public function destroy($id) {
         //dump($request->all());
         $book = Book::find($id);
-        Book::where('id',$id)->delete();
 
+        if(is_null($book)) {
+            Session::flash('flash_message','Book not found');
+            return redirect('/books');
+        }
+
+        $book->delete($id);
         Session::flash('flash_message','The book '.$book->title.' was removed.');
         return redirect('/books');
+
     }
 
 

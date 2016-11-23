@@ -1,14 +1,22 @@
 @extends('layouts.master')
 
 @section('title')
-    Delete {{ $book->title }}
+    Delete a Book    <!-- {{ $book->title }} -->
 @stop
 
 @section('content')
 
-    <h1>Delete {{ $book->title }} </h1>
+    <h1>Delete this book</h2>        <!-- {{ $book->title }} </h1> -->
 
-    <form method='POST' action='/books/{{ $book->id }}'>
+    <p>
+        Confirm that you want to delete {{ $book->title }}
+    </p>
+
+    <p>
+        <a href='/books/delete/{{$book->id}}'> confirm <.a>
+    </p>
+
+    <!-- <form method='POST' action='/books/delete/{{ $book->id }}'>
 
         {{ method_field('DELETE') }}
 
@@ -40,7 +48,7 @@
             @endif
         </div>
 
-    </form>
+    </form> -->
 
 
 @stop

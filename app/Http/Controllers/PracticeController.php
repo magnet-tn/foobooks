@@ -17,6 +17,7 @@ use App\Book;
 
 class PracticeController extends Controller
 {
+/**
     /**
     *
     */

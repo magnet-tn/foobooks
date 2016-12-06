@@ -132,7 +132,7 @@ class BookController extends Controller
             return redirect('/books');
         }
 
-        $book->delete($id);
+        $book->delete();
         Session::flash('flash_message','The book '.$book->title.' was removed.');
         return redirect('/books');
 

@@ -8,9 +8,6 @@ class Author extends Model
 {
 
     /* Relationship Methods */
-    /**
-	*
-	*/
 
     public function books() {
         # Author has many Books

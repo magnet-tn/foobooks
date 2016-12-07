@@ -3,26 +3,118 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
-
 use Rych\Random\Random;
-
 use joshtronic\LoremIpsum;
-
 use DB;
 use Carbon;
-
 use App\Book;
+use App\Author;
 
 class PracticeController extends Controller
 {
-/**
+    /**
+    *
+    */
+    public function example21() {
+    //
+    }
+
+    /**
+    *
+    */
+    public function example20() {
+        # With *eager loading*
+        $books = Book::with('tags')->get();
+        # Now without *eager loading*
+        // $books = Book::get();
+
+        foreach($books as $book) {
+            dump($book->title.' is tagged with: ');
+            foreach($book->tags as $tag) {
+                dump($tag->name);
+            }
+        }
+    }
+
+    /**
+    *
+    */
+    public function example19() {
+        $book = Book::where('title', '=', 'The Great Gatsby')->first();
+
+        dump($book->title);
+
+        foreach($book->tags as $tag) {
+            dump($tag->name);
+        }
+    }
+
+    /**
+    *
+    */
+    public function example18() {
+        # Eager load the author with the book
+        $books = Book::with('author')->get(); //The 'author' relationship method is needed here.
+        # This is a basic query without eager loading, Try both.
+        // $books = Book::get();
+
+        # When you loop below,
+        # The Eager method (getting the related author data with the query)
+        # means you don't go back to query for each book tp get the author.
+
+
+        foreach($books as $book) {
+            echo $book->author->first_name.' '.$book->author->last_name.' wrote '.$book->title.'<br>';
+        }
+
+        dump($books->toArray());
+    }
+
+    /**
+    *
+    */
+    public function example17() {
+        # Get the first book as an example
+    $book = Book::first();
+    #$book = Book::where('id', '=', 3)->first();  //can try this too, but *get* doesn't work
+
+    # Get the author from this book using the "author" dynamic property
+    # "author" corresponds to the the relationship method defined in the Book model
+    $author = $book->author;
+    #This *author* is a dynamic property - saying to be aware of an relationship
+    #Note that the above is different than the below which returns the relationship
+    # $author = $book->author();
+    #dd($author); returns the object in the first case, and the relationship in the second.
+    #dd($author);
+
+    # Output
+    #dump($book->title.' was written by '.$author->first_name.' '.$author->last_name);
+    dump($book->toArray());
+    }
     /**
     *
     */
     public function example16() {
-    //
+        # To do this, we'll first create a new author:
+        $author = new Author;
+        $author->first_name = 'J.K';
+        $author->last_name = 'Rowling';
+        $author->bio_url = 'https://en.wikipedia.org/wiki/J._K._Rowling';
+        $author->birth_year = '1965';
+        $author->save();
+        dump($author->toArray());
+
+        # Then we'll create a new book and associate it with the author:
+        $book = new Book;
+        $book->title = "Harry Potter and the Philosopher's Stone";
+        $book->published = 1997;
+        $book->cover = 'http://prodimage.images-bn.com/pimages/9781582348254_p0_v1_s118x184.jpg';
+        $book->purchase_link = 'http://www.barnesandnoble.com/w/harrius-potter-et-philosophi-lapis-j-k-rowling/1102662272?ean=9781582348254';
+        $book->author()->associate($author); # <--- Associate the author with this book
+        $book->save();
+        dump($book->toArray());
+
     }
     /**
     *

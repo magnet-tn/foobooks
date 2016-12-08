@@ -37,13 +37,29 @@
         </a>
     </header>
 
+{{-- New nav  --}}
+    <nav>
+        <ul>
+            @if(Auth::check())
+                <li><a href='/'>Home</a></li>
+                <li><a href='/books/create'>Add a book</a></li>
+                <li><a href='/logout'>Log out</a></li>
+            @else
+                <li><a href='/'>Home</a></li>
+                <li><a href='/login'>Log in</a></li>
+                <li><a href='/register'>Register</a></li>
+            @endif
+        </ul>
+    </nav>
+
+{{-- old nav
     <nav>
         <ul>
             <li><a href='/books'>View all books</a></li>
             <li><a href='/books/create'>Add a new book</a></li>
         </ul>
     </nav>
-
+ --}}
 
     <section>
         {{-- Main page content will be yielded here --}}

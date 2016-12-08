@@ -14,24 +14,40 @@ class BookController extends Controller
 {
 
     /**
-    *
+    * GET
     */
     public function index()
     {
-        $books = Book::all();
-        // dump($books);
-        // dump($books->first());
-        return view('book.index')->with(['books' => $books]);
+        $user = $request->user();
+        # Note: We're getting the user from the request, but you can also get it like this:
+        //$user = Auth::user();
+        if($user) {
+            # Approach 1)
+            $books = Book::where('user_id', '=', $user->id)->orderBy('id','DESC')->get();
+            # Approach 2) Take advantage of Model relationships
+            #$books = $user->books()->get();
+        }
+        else {
+            $books = [];
+        }
+        return view('book.index')->with([
+            'books' => $books
+        ]);
     }
-
     /**
     * Get
     */
     public function create()
     {
-        return view('book.create');
+        # Author
+        $authors_for_dropdown = Author::getForDropdown();
+        # Author
+        $tags_for_checkboxes = Tag::getForCheckboxes();
+        return view('book.create')->with([
+            'authors_for_dropdown' => $authors_for_dropdown,
+            'tags_for_checkboxes' => $tags_for_checkboxes
+        ]);
     }
-
     /**
     *
     */
@@ -61,8 +77,15 @@ class BookController extends Controller
         $book = new Book();
         $book->title = $request->input('title');
         $book->published = $request->input('published');
-        $book->cover = $request->input('cover');
+        $book->cover = $request->        Sinput('cover');
         $book->purchase_link = $request->input('purchase_link');
+        $book->user_id = $request->user()->id;
+        $book->save();
+
+
+        # Save Tags
+        $tags = ($request->tags) ?: [];
+        $book->tags()->sync($tags);
         $book->save();
 
         Session::flash('flash_message','Your book '.$book->title.' was added.');
@@ -72,11 +95,18 @@ class BookController extends Controller
 
 
     /**
-    *
+    * GET
     */
     public function show($id)
     {
-        return view('book.show')->with('title', $id);
+        $book = Book::find($id);
+        if(is_null($book)) {
+            Session::flash('message','Book not found');
+            return redirect('/books');
+        }
+        return view('book.show')->with([
+            'book' => $book,
+        ]);
     }
 
 
@@ -177,24 +207,39 @@ public function update(Request $request, $id)
     return redirect('/books');
 }
 
+
 /**
-*
+* GET
+* Page to confirm deletion
 */
-public function destroy($id) {
-    //dump($request->all());
+public function delete($id) {
     $book = Book::find($id);
-
-    if(is_null($book)) {
-        Session::flash('flash_message','Book not found');
-        return redirect('/books');
-    }
-
-    $book->delete();
-    Session::flash('flash_message','The book '.$book->title.' was removed.');
-    return redirect('/books');
-
+    return view('book.delete')->with('book', $book);
 }
 
+
+
+/**
+* POST
+*/
+public function destroy($id)
+{
+    # Get the book to be deleted
+    $book = Book::find($id);
+    if(is_null($book)) {
+        Session::flash('message','Book not found.');
+        return redirect('/books');
+    }
+    # First remove any tags associated with this book
+    if($book->tags()) {
+        $book->tags()->detach();
+    }
+    # Then delete the book
+    $book->delete();
+    # Finish
+    Session::flash('flash_message', $book->title.' was deleted.');
+    return redirect('/books');
+}
 
 /**
 * This was example code I wrote in Lecture 7

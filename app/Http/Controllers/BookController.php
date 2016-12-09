@@ -6,8 +6,8 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Book;
-use App\Author;
 use App\Tag;
+use App\Author;
 use Session;
 
 class BookController extends Controller
@@ -16,16 +16,16 @@ class BookController extends Controller
     /**
     * GET
     */
-    public function index()
+    public function index(Request $request)
     {
         $user = $request->user();
         # Note: We're getting the user from the request, but you can also get it like this:
         //$user = Auth::user();
         if($user) {
             # Approach 1)
-            $books = Book::where('user_id', '=', $user->id)->orderBy('id','DESC')->get();
+            #$books = Book::where('user_id', '=', $user->id)->orderBy('id','DESC')->get();
             # Approach 2) Take advantage of Model relationships
-            #$books = $user->books()->get();
+            $books = $user->books()->get();
         }
         else {
             $books = [];
@@ -41,19 +41,21 @@ class BookController extends Controller
     {
         # Author
         $authors_for_dropdown = Author::getForDropdown();
+
         # Author
         $tags_for_checkboxes = Tag::getForCheckboxes();
+
         return view('book.create')->with([
             'authors_for_dropdown' => $authors_for_dropdown,
             'tags_for_checkboxes' => $tags_for_checkboxes
         ]);
     }
+
     /**
     *
     */
     public function store(Request $request)
     {
-
         # Validate
         $this->validate($request, [
             'title' => 'required|min:3',
@@ -77,18 +79,19 @@ class BookController extends Controller
         $book = new Book();
         $book->title = $request->input('title');
         $book->published = $request->input('published');
-        $book->cover = $request->        Sinput('cover');
+        $book->cover = $request->input('cover');
+        $book->author_id = $request->author_id;
         $book->purchase_link = $request->input('purchase_link');
         $book->user_id = $request->user()->id;
         $book->save();
-
 
         # Save Tags
         $tags = ($request->tags) ?: [];
         $book->tags()->sync($tags);
         $book->save();
 
-        Session::flash('flash_message','Your book '.$book->title.' was added.');
+        Session::flash('flash_message', 'Your book '.$book->title.' was added.');
+
         return redirect('/books');
 
     }
@@ -100,10 +103,12 @@ class BookController extends Controller
     public function show($id)
     {
         $book = Book::find($id);
+
         if(is_null($book)) {
             Session::flash('message','Book not found');
             return redirect('/books');
         }
+
         return view('book.show')->with([
             'book' => $book,
         ]);
@@ -116,25 +121,12 @@ class BookController extends Controller
     public function edit($id)
     {
         $book = Book::find($id);
-        #dump($book);
 
-        # Author
-        $authors = Author::orderBy('last_name', 'ASC')->get();
+        # Possible authors
+        $authors_for_dropdown = Author::getForDropdown();
 
-
-        # Organize the authors into an array where the key = author id
-        # and value = author name
-        $authors_for_dropdown = [];
-        foreach($authors as $author) {
-            $authors_for_dropdown[$author->id] = $author->last_name.', '.$author->first_name;
-        }
-
-        # Tags
-        $tags = Tag::orderBy('name', 'ASC')->get();
-        $tags_for_checkboxes = [];
-        foreach($tags as $tag) {
-            $tags_for_checkboxes[$tag->id] = $tag->name;
-        }
+        # Possible tags
+        $tags_for_checkboxes = Tag::getForCheckboxes();
 
         # Just the tags for this book
         $tags_for_this_book = [];
@@ -142,23 +134,15 @@ class BookController extends Controller
             $tags_for_this_book[] = $tag->name;
         }
 
-        # dump($tags_for_this_book);
-
-        # Make sure $authors_for_dropdown is passed to the view
-        if(is_null($book)) {
-            Session::flash('flash_message','Book not found');
-            return redirect('/books');
-        } else {
-            return view('book.edit')->with(
+        return view('book.edit')->with(
             [
-                'book' => $book,   // passing the book info to pre-fill the field for editing
+                'book' => $book,
                 'authors_for_dropdown' => $authors_for_dropdown,
                 'tags_for_checkboxes' => $tags_for_checkboxes,
                 'tags_for_this_book' => $tags_for_this_book,
             ]
         );
     }
-}
 
 /**
 *
@@ -213,7 +197,9 @@ public function update(Request $request, $id)
 * Page to confirm deletion
 */
 public function delete($id) {
+
     $book = Book::find($id);
+
     return view('book.delete')->with('book', $book);
 }
 
@@ -226,16 +212,20 @@ public function destroy($id)
 {
     # Get the book to be deleted
     $book = Book::find($id);
+
     if(is_null($book)) {
         Session::flash('message','Book not found.');
         return redirect('/books');
     }
+
     # First remove any tags associated with this book
     if($book->tags()) {
         $book->tags()->detach();
     }
+
     # Then delete the book
     $book->delete();
+
     # Finish
     Session::flash('flash_message', $book->title.' was deleted.');
     return redirect('/books');

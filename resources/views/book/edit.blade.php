@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('title')
-Edit {{ $book->title }}
+    Edit {{ $book->title }}
 @stop
 
 @section('content')
@@ -61,26 +61,31 @@ Edit {{ $book->title }}
         <div class='error'>{{ $errors->first('purchase_link') }}</div>
     </div>
 
-    <select name='author_id'> {{-- need the name to return data in the request  --}}
-        @foreach($authors_for_dropdown as $author_id => $author) {{-- key points to value --}}
-            <option
+
+    <div class='form-group'>
+        <label>Author</label>
+        <select name='author_id'>
+            @foreach($authors_for_dropdown as $author_id => $author)
+                <option
                 {{ ($author_id == $book->author->id) ? 'SELECTED' : '' }}
                 value='{{ $author_id }}'
-            >{{ $author }}</option>
-        @endforeach
-    </select>
+                >{{ $author }}</option>
+            @endforeach
+        </select>
+    </div>    <br>
 
-    <br>
-
-    @foreach($tags_for_checkboxes as $tag_id => $tag_name)
-        <input
+    <div class='form-group'>
+        <label>Tags</label>
+        @foreach($tags_for_checkboxes as $tag_id => $tag_name)
+            <input
             type='checkbox'
             value='{{ $tag_id }}'
             name='tags[]'
             {{ (in_array($tag_name, $tags_for_this_book)) ? 'CHECKED' : '' }}
-        >
-        {{ $tag_name }} <br>
-    @endforeach
+            >
+            {{ $tag_name }} <br>
+        @endforeach
+    </div>
 
 
     <div class='form-instructions'>

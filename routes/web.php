@@ -17,10 +17,10 @@ Route::get('/show-login-status', function() {
 * Book resource
 */
 # Index page to show all the books
-Route::get('/books', 'BookController@index')->name('books.index');
+Route::get('/books', 'BookController@index')->name('books.index')->middleware('auth');
 
 # Show a form to create a new book
-Route::get('/books/create', 'BookController@create')->name('books.create');
+Route::get('/books/create', 'BookController@create')->name('books.create')->middleware('auth');
 
 # Process the form to create a new book
 Route::post('/books', 'BookController@store')->name('books.store');
@@ -34,8 +34,11 @@ Route::get('/books/{id}/edit', 'BookController@edit')->name('books.edit');
 # Process form to edit a book
 Route::put('/books/{id}', 'BookController@update')->name('books.update');
 
-# Delete a book
-Route::get('/books/delete/{id}', 'BookController@destroy')->name('books.destroy');
+# Get route to confirm deletion of book
+Route::get('/books/{id}/delete', 'BookController@delete')->name('books.destroy');
+
+# Delete route to actually destroy the book
+Route::delete('/books/{id}', 'BookController@destroy')->name('books.destroy');
 
 # or I could have used one line:
 # Route::resource('books', 'BookController');
@@ -79,19 +82,27 @@ for($i = 0; $i < 107; $i++) {
 * ref: https://github.com/susanBuck/dwa15-fall2016-notes/blob/master/03_Laravel/21_Schemas_and_Migrations.md#starting-overyour-first-migrations
 */
 if(App::environment('local')) {
+
     Route::get('/drop', function() {
+
         DB::statement('DROP database foobooks');
         DB::statement('CREATE database foobooks');
+
         return 'Dropped foobooks; created foobooks.';
     });
+
 };
 
 /**
 * Main homepage
 */
-Route::get('/', function () {
-    return view('welcome');
-});
+# Old: Dedicated view for the homepage
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+# New as of Lecture 11, just use the "book index" as the homepage
+Route::get('/', 'PageController@welcome');
+
 // or home page is now the view all books with below...
 //Route::get('/', 'BookController@index');
 
@@ -138,4 +149,4 @@ Route::get('/debug', function() {
 Auth::routes();
 Route::get('/logout','Auth\LoginController@logout')->name('logout');
 
-Route::get('/home', 'HomeController@index');
+#Route::get('/home', 'HomeController@index');

@@ -67,6 +67,10 @@
     </section>
 
     <footer>
+        &copy; {{ date('Y') }}
+    </footer>
+
+    <footer>
      &copy; {{ date('Y') }} &nbsp;&nbsp;
      <a href='https://github.com/magnet-tn/foobooks' target='_blank'><i class='fa fa-github'></i> View on Github</a> &nbsp;&nbsp;
      <a href='http://foobooks.troubleu.com' target='_blank'><i class='fa fa-link'></i> View Live</a>

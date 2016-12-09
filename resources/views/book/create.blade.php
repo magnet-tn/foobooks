@@ -57,6 +57,23 @@
            <div class='error'>{{ $errors->first('purchase_link') }}</div>
         </div>
 
+        <div class='form-group'>
+            <label>Author</label>
+            <select name='author_id'>
+                @foreach($authors_for_dropdown as $author_id => $author)
+                    <option
+                    value='{{ $author_id }}'
+                    >{{ $author }}</option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class='form-group'>
+            <label>Tags</label>
+            @foreach($tags_for_checkboxes as $tag_id => $tag_name)
+                <input type='checkbox' value='{{ $tag_id }}' name='tags[]'> {{ $tag_name }} <br>
+            @endforeach
+        </div>
 
         <div class='form-instructions'>
             All fields are required
